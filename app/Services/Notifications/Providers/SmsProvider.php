@@ -7,6 +7,7 @@ use Ghasedak\GhasedakApi;
 use Ghasedak\Exceptions\ApiException;
 use Ghasedak\Exceptions\HttpException;
 use App\Services\Notifications\Contracts\ProviderInterface;
+use App\Services\Notifications\Exceptions\UserDoesNotHavePhoneNumber;
 
 class SmsProvider implements ProviderInterface
 {
@@ -17,9 +18,12 @@ class SmsProvider implements ProviderInterface
     ) {
         # code...
     }
-    
+
     public function send()
     {
+
+        $this->userHavePhoneNumber();
+
         try {
             $this->prepareDateSms();
         } catch (ApiException $e) {
@@ -36,5 +40,12 @@ class SmsProvider implements ProviderInterface
         $receptor = $this->user->phone_number;
         $api = new GhasedakApi(config('services.sms.api_key'));
         return $api->SendSimple($receptor, $message, $lineNumber);
+    }
+
+    private function userHavePhoneNumber()
+    {
+        if (is_null($this->user->phone_number)) {
+            throw new UserDoesNotHavePhoneNumber();
+        }
     }
 }
