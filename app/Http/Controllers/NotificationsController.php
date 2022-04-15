@@ -7,6 +7,7 @@ use App\Jobs\SendEmail;
 use Illuminate\Http\Request;
 use App\Http\Requests\SmsRequest;
 use App\Http\Requests\EmailRequest;
+use App\Jobs\SendSms;
 use App\Services\Notifications\Notification;
 use App\Services\Notifications\Constants\EmailTypes;
 use App\Services\Notifications\Exceptions\UserDoesNotHavePhoneNumber;
@@ -39,9 +40,14 @@ class NotificationsController extends Controller
 
     public function sendSms(SmsRequest $request)
     {
+
         try {
-            $notification = new Notification();
-            $notification->sendSms(User::find($request->user), $request->text);
+
+            if (is_null(User::find($request->user)->phone_number)) {
+                throw new UserDoesNotHavePhoneNumber();
+            }
+
+            SendSms::dispatch(User::find($request->user), $request->text);
             return redirect()->back()->with('success', __('notifications.sms_send_successfully'));
         } catch (UserDoesNotHavePhoneNumber $e) {
             return redirect()->back()->with('failed', __('notifications.does_not_have_phone'));
