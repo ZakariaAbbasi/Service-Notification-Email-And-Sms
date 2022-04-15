@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\NotificationsController;
 use App\Models\User;
 use App\Mail\TopicCreated;
 use Illuminate\Support\Facades\Route;
@@ -18,8 +18,13 @@ use App\Services\Notifications\Notification;
 |
 */
 
-Route::get('/', function () {
-    $notification = resolve(Notification::class);
-    $notification->sendSms(User::find(1), 'new TopicCreated');
+// Route::get('/', function () {
+//     $notification = resolve(Notification::class);
+//     $notification->sendSms(User::find(1), 'new TopicCreated');
 
-});
+// });
+
+Route::view('/', 'home');
+
+Route::get('/notifications/send-email', [NotificationsController::class, 'email'])->name('notifications.form.email');
+Route::post('/notifications/send-email', [NotificationsController::class, 'sendEmail'])->name('notifications.send.email');

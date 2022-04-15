@@ -22,9 +22,9 @@ class SmsProvider implements ProviderInterface
     {
         try {
             $this->prepareDateSms();
-        } catch (\Ghasedak\Exceptions\ApiException $e) {
+        } catch (ApiException $e) {
             return $e->errorMessage();
-        } catch (\Ghasedak\Exceptions\HttpException $e) {
+        } catch (HttpException $e) {
             return $e->errorMessage();
         }
     }
@@ -34,7 +34,7 @@ class SmsProvider implements ProviderInterface
         $message = $this->text;
         $lineNumber = config('services.sms.auth.sms_line_number');
         $receptor = $this->user->phone_number;
-        $api = new \Ghasedak\GhasedakApi(config('services.sms.api_key'));
+        $api = new GhasedakApi(config('services.sms.api_key'));
         return $api->SendSimple($receptor, $message, $lineNumber);
     }
 }

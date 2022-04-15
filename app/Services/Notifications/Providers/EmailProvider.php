@@ -16,6 +16,6 @@ class EmailProvider implements ProviderInterface
 
     public function send()
     {
-        return Mail::to($this->user)->send($$this->mailable);
+        return Mail::to($this->user)->send($this->mailable);
     }
 }

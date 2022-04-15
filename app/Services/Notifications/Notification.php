@@ -3,7 +3,7 @@
 namespace App\Services\Notifications;
 
 use App\Services\Notifications\Contracts\ProviderInterface;
-use App\Services\Notifications\Exceptions\ClassDoesNotException;
+use App\Services\Notifications\Exceptions\ClassDoesNotProviderException;
 
 /**
  * @method sendEmail(\App\Models\User $user, \Illuminate\Mail\Mailable $malable)
@@ -19,7 +19,7 @@ class Notification
         $providerPath = '\App\Services\Notifications\Providers\\' . substr($method, 4) . 'Provider';
 
         if (!class_exists($providerPath)) {
-            throw new ClassDoesNotException('class does not exists');
+            throw new ClassDoesNotProviderException();
         }
         $providerInstance = new $providerPath(...$args);
 
