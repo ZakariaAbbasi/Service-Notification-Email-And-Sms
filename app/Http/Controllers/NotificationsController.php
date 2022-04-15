@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Jobs\SendEmail;
 use Illuminate\Http\Request;
 use App\Http\Requests\SmsRequest;
 use App\Http\Requests\EmailRequest;
@@ -22,9 +23,8 @@ class NotificationsController extends Controller
     public function sendEmail(EmailRequest $request)
     {
         try {
-            $notification = new Notification();
             $mailable = EmailTypes::toMail($request->email_type);
-            $notification->sendEmail(User::find($request->user), new $mailable);
+            SendEmail::dispatch(User::find($request->user), new $mailable);
             return redirect()->back()->with('success', __('notifications.email_send_successfully'));
         } catch (\Throwable $th) {
             return redirect()->back()->with('failed', __('notifications.email_has_problem'));
