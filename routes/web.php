@@ -20,6 +20,6 @@ use App\Services\Notifications\Notification;
 
 Route::get('/', function () {
     $notification = resolve(Notification::class);
-    $notification->sendEmail(User::find(2), new TopicCreated);
+    $notification->sendSms(User::find(1), 'new TopicCreated');
 
 });

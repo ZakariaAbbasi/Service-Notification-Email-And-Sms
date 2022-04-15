@@ -31,4 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sms' => [
+        'auth' => [
+            'sms_line_number' => env('SMS_LINE_NUMBER'),
+        ],
+        'api_key' => env('GHASEDAK_API_KEY'),
+
+    ]
+
 ];
